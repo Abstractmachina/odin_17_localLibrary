@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
+const { DateTime } = require('luxon');
 
 const AuthorSchema = new Schema({
     first_name: { type: String, required: true, maxLength: 100},
@@ -30,5 +31,15 @@ AuthorSchema.virtual("url").get(function() {
      // We don't use an arrow function as we'll need the this object
      return `/catalog/author/${this._id}`;
 });
+
+AuthorSchema.virtual("date_of_birth_formatted").get(function() {
+    if (!this.date_of_birth) return 'N/A';
+    return DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATETIME_SHORT);
+})
+
+AuthorSchema.virtual("date_of_death_formatted").get(function() {
+    if (!this.date_of_death) return 'N/A';
+    return DateTime.fromJSDate(this.date_of_death).toLocaleString(DateTime.DATETIME_SHORT);
+})
 
 module.exports = mongoose.model("Author", AuthorSchema);
