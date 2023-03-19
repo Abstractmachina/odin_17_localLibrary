@@ -203,6 +203,7 @@ exports.bookinstance_update_post = [
 			imprint: req.body.imprint,
 			status: req.body.status,
 			due_back: req.body.due_back,
+			_id: req.params.id,
 		});
 	
 		if (!errors.isEmpty()) {
@@ -224,12 +225,12 @@ exports.bookinstance_update_post = [
 		}
 	
 		// Data from form is valid.
-		bookinstance.save((err) => {
+		BookInstance.findByIdAndUpdate(req.params.id, bookinstance, {}, (err, theBookinstance) => {
 			if (err) {
 			return next(err);
 			}
 			// Successful: redirect to new record.
-			res.redirect(bookinstance.url);
+			res.redirect(theBookinstance.url);
 		});
 	},
 ];
